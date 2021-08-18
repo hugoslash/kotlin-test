@@ -1,16 +1,16 @@
 package com.slashmobility.kotlinbasebackend.database.entity
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "roles")
 data class Role(
-    @Id
-    @Column(name = "id", nullable = false)
-    val id: Long,
+
     val name: String
 ) {
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long ? = null
+
 }
