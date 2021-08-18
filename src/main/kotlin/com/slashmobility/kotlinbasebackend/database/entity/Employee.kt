@@ -15,6 +15,7 @@ data class Employee(
     var firstname: String? = null,
     var lastname: String? = null,
     var email: String? = null,
+    private var password: String,
 
     @Column(nullable = false, unique = true)
     @OneToMany(mappedBy = "employee")
@@ -23,8 +24,6 @@ data class Employee(
 
     @ManyToMany
     var authorities = mutableListOf<Authority>()
-    //@OneToOne(mappedBy = "jwtUser")
-    //var employee: Employee? = null
 
     @Transient
     var grantedAuthorities: MutableCollection<out GrantedAuthority> = mutableListOf()

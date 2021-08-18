@@ -1,8 +1,11 @@
 package com.slashmobility.kotlinbasebackend.service.implementation
 
+import com.slashmobility.kotlinbasebackend.config.AuthorityName
+import com.slashmobility.kotlinbasebackend.database.entity.Employee
 import com.slashmobility.kotlinbasebackend.database.repository.EmployeeRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Primary
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -12,15 +15,18 @@ import org.springframework.stereotype.Service
 @Service
 class JwtUserDetailsServiceImpl : UserDetailsService {
     @Autowired
-    lateinit var userRepository: EmployeeRepository
+    lateinit var employeeRepository: EmployeeRepository
 
-    override fun loadUserByUsername(username: String?): UserDetails {
-        //var user = username?.let { userRepository.findByUsername(it) }
-        //if (user == null){
-        //    throw UsernameNotFoundException(String.format("No user found with username '%s'.", username))
-        //}
+    override fun loadUserByUsername(email: String?): UserDetails {
+        var employee: Employee? = email?.let { employeeRepository.findByEmail(it) }
+            ?: throw UsernameNotFoundException(String.format("No user found with username '%s'.", email))
 
-        val UserDetails = org.springframework.security.core.userdetails.User("hola","hola", null)
+
+        val grantedAuthorities = employee!!.authorities
+            .map { authority -> SimpleGrantedAuthority(authority.name?.name) }
+            .toMutableList()
+        var UserDetails = org.springframework.security.core.userdetails.User(employee.email,
+            employee.password, grantedAuthorities)
         return UserDetails
     }
 }
