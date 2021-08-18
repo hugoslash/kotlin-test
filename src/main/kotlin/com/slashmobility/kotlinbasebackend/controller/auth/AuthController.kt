@@ -21,7 +21,6 @@ class AuthController {
     @PostMapping("login")
     @Throws(AuthenticationException::class)
     fun createAuthenticationToken(@RequestBody authenticationRequest: LoginRequest): ResponseEntity<*> {
-
         return ResponseEntity.ok(loginService.login(authenticationRequest))
     }
 
