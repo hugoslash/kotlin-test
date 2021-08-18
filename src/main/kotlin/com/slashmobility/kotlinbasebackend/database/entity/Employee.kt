@@ -7,23 +7,26 @@ import javax.persistence.*
 import kotlin.jvm.Transient
 
 @Entity
+@Table(name = "employees")
 data class Employee(
+
+    var firstname: String? = null,
+    var lastname: String? = null,
+    @Column(unique=true)
+    var email: String,
+    private var password: String,
+
+
+): UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    var id: Long,
-    var firstname: String? = null,
-    var lastname: String? = null,
-    var email: String? = null,
-    private var password: String,
+    var id: Long? = null
 
     @Column(nullable = false, unique = true)
     @OneToMany(mappedBy = "employee")
-    var roles: Set<EmployeeRoles>
-): UserDetails {
-
-    @ManyToMany
-    var authorities = mutableListOf<Authority>()
+    lateinit var roles: Set<EmployeeRoles>
 
     @Transient
     var grantedAuthorities: MutableCollection<out GrantedAuthority> = mutableListOf()
@@ -54,8 +57,8 @@ data class Employee(
         if (grantedAuthorities.size >0 ){
             return grantedAuthorities
         }else{
-            grantedAuthorities = authorities
-                .map { authority -> SimpleGrantedAuthority(authority.name?.name) }
+            grantedAuthorities = roles
+                .map { role -> SimpleGrantedAuthority(role.role.name) }
                 .toMutableList()
             return grantedAuthorities
         }

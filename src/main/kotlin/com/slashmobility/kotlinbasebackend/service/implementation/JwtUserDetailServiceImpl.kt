@@ -1,6 +1,5 @@
 package com.slashmobility.kotlinbasebackend.service.implementation
 
-import com.slashmobility.kotlinbasebackend.config.AuthorityName
 import com.slashmobility.kotlinbasebackend.database.entity.Employee
 import com.slashmobility.kotlinbasebackend.database.repository.EmployeeRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,8 +21,8 @@ class JwtUserDetailsServiceImpl : UserDetailsService {
             ?: throw UsernameNotFoundException(String.format("No user found with username '%s'.", email))
 
 
-        val grantedAuthorities = employee!!.authorities
-            .map { authority -> SimpleGrantedAuthority(authority.name?.name) }
+        val grantedAuthorities = employee!!.roles
+            .map { role -> SimpleGrantedAuthority(role.role?.name) }
             .toMutableList()
         var UserDetails = org.springframework.security.core.userdetails.User(employee.email,
             employee.password, grantedAuthorities)
