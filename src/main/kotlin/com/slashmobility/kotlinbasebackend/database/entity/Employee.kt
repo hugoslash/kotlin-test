@@ -20,13 +20,17 @@ data class Employee(
 ): UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null
 
-    @Column(nullable = false, unique = true)
-    @OneToMany(mappedBy = "employee")
-    lateinit var roles: Set<EmployeeRoles>
+    @ManyToMany(cascade = [CascadeType.ALL])
+    @JoinTable(name = "employee_roles")
+    lateinit var roles: Set<Role>
+
+    var value: Int ? = null
+    var autoValue: Int ? = null
+    var salary: Float ?= null
 
     @Transient
     var grantedAuthorities: MutableCollection<out GrantedAuthority> = mutableListOf()
@@ -34,15 +38,15 @@ data class Employee(
         return true
     }
 
-    override fun getUsername(): String? {
-        return username
+    override fun getUsername(): String {
+        return this.username
     }
 
     override fun isCredentialsNonExpired(): Boolean {
         return true
     }
 
-    override fun getPassword(): String? {
+    override fun getPassword(): String {
         return password
     }
 
@@ -54,13 +58,13 @@ data class Employee(
         return true
     }
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        if (grantedAuthorities.size >0 ){
-            return grantedAuthorities
+        return if (grantedAuthorities.isNotEmpty() ){
+            grantedAuthorities
         }else{
             grantedAuthorities = roles
-                .map { role -> SimpleGrantedAuthority(role.role.name) }
+                .map { role -> SimpleGrantedAuthority(role.name) }
                 .toMutableList()
-            return grantedAuthorities
+            grantedAuthorities
         }
 
     }

@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RestController
 class HealthController {
 
     @GetMapping()
-    fun hello() = "Hello world"
+    fun hello() = "I'm ALIVE"
 }
