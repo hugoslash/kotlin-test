@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 @Service
 class DepartmentServiceImp  : DepartmentService {
 
-
     @Autowired
     lateinit var departmentRepository: DepartmentRepository
 

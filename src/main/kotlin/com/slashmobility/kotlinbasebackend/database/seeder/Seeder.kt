@@ -35,9 +35,10 @@ class Seeder(private val employeeRepository: EmployeeRepository,
 
         val newUserName = "s@yopmail.com"
         if(!employeeRepository.existsByEmail(newUserName)){
-            val newEmployee = Employee( "hugo", "slash", newUserName, bCryptPasswordEncoder.encode("Spring1234."))
-            newEmployee.roles = roles
-            employeeRepository.save(newEmployee)
+            val newEmployeeAdmin = Employee( "hugo", "slash", newUserName, bCryptPasswordEncoder.encode("Spring1234."))
+            newEmployeeAdmin.roles = roles
+            employeeRepository.save(newEmployeeAdmin)
+
         }
 
     }

@@ -1,6 +1,5 @@
 package com.slashmobility.kotlinbasebackend.security
 
-import com.slashmobility.kotlinbasebackend.database.entity.Employee
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.collections.HashMap
 
 @Component
 class JwtTokenUtil {
@@ -144,11 +142,11 @@ class JwtTokenUtil {
     }
 
     fun validateToken(token: String, userDetails: UserDetails): Boolean? {
-        val user = userDetails as Employee
+        //val user = userDetails as Employee
         val username = getUsernameFromToken(token)
         val created = getCreatedDateFromToken(token)
         //final Date expiration = getExpirationDateFromToken(token);
-        return (username == user.email
+        return (username == userDetails.username
                 && !isTokenExpired(token)
                 )
     }

@@ -24,12 +24,12 @@ data class Employee(
     @Column(name = "id", nullable = false)
     var id: Long? = null
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinTable(name = "employee_roles")
     lateinit var roles: Set<Role>
 
     var value: Int ? = null
-    var autoValue: Int ? = null
+    var selfValue: Int ? = null
     var salary: Float ?= null
 
     @Transient
@@ -38,29 +38,18 @@ data class Employee(
         return true
     }
 
-    override fun getUsername(): String {
-        return this.username
-    }
+    override fun getUsername(): String = this.username
 
-    override fun isCredentialsNonExpired(): Boolean {
-        return true
-    }
+    override fun isCredentialsNonExpired(): Boolean = true
 
-    override fun getPassword(): String {
-        return password
-    }
+    override fun getPassword(): String = this.password
 
-    override fun isAccountNonExpired(): Boolean {
-        return true
-    }
+    override fun isAccountNonExpired(): Boolean = true
 
-    override fun isAccountNonLocked(): Boolean {
-        return true
-    }
+    override fun isAccountNonLocked(): Boolean = true
+
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return if (grantedAuthorities.isNotEmpty() ){
-            grantedAuthorities
-        }else{
+        return grantedAuthorities.ifEmpty {
             grantedAuthorities = roles
                 .map { role -> SimpleGrantedAuthority(role.name) }
                 .toMutableList()
