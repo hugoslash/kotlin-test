@@ -32,6 +32,11 @@ data class Employee(
     var selfValue: Int ? = null
     var salary: Float ?= null
 
+    @OneToMany
+    @MapsId("TaskId")
+    @JoinColumn(name = "employee_id")
+    var tasks: List<Task> ?= null
+
     @Transient
     var grantedAuthorities: MutableCollection<out GrantedAuthority> = mutableListOf()
     override fun isEnabled(): Boolean {
