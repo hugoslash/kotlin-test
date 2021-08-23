@@ -2,6 +2,9 @@
 
 ## SET UP
 
+Clone this repo, master branch
+- git clone https://github.com/hugoslash/kotlin-test/master
+
 Configure your database connection in application properties or add a environment in the IDE to override this properties. Variables
 - spring.datasource.url=
 - spring.datasource.username=
