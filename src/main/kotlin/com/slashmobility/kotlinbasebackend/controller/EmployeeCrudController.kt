@@ -23,7 +23,7 @@ class EmployeeCrudController {
 
     @PatchMapping("{id}")
     @PreAuthorize("hasRole('$ROLE_MANAGER')")
-    fun updateEmployee (@RequestBody request: UpdateEmployeeRequest): ResponseEntity<EmployeeResponse> = ResponseEntity.ok(employeeService.updateEmployee(request))
+    fun updateEmployee (@PathVariable id:Long, @RequestBody request: UpdateEmployeeRequest): ResponseEntity<EmployeeResponse> = ResponseEntity.ok(employeeService.updateEmployee(id, request))
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('$ROLE_MANAGER')")

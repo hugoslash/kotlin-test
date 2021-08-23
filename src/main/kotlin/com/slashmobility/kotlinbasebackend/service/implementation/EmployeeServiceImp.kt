@@ -11,6 +11,7 @@ import javassist.NotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -21,6 +22,8 @@ class EmployeeServiceImp  : EmployeeService {
     lateinit var employeeRepository : EmployeeRepository
     @Autowired
     lateinit var taskRepository : TaskRepository
+    @Autowired
+    lateinit var passwordEncoder: BCryptPasswordEncoder
 
     override fun selfValue(request: EmployeeSelfValueRequest): EmployeeResponse {
         val employee = employeeRepository.findByEmail(SecurityContextHolder.getContext().authentication.name)
@@ -54,13 +57,13 @@ class EmployeeServiceImp  : EmployeeService {
     }
 
     override fun createEmployee(request: CreateEmployeeRequest): EmployeeResponse {
-        val employee = Employee(request.name,request.lastName,request.email, request.password)
+        val employee = Employee(request.name,request.lastName,request.email, passwordEncoder.encode(request.password))
         employeeRepository.save(employee)
         return EmployeeResponse(employee.id,employee.email,employee.firstname,employee.selfValue,employee.value,employee.salary, employee.tasks)
     }
 
-    override fun updateEmployee(request: UpdateEmployeeRequest): EmployeeResponse {
-        val optionalEmployee: Optional<Employee> = employeeRepository.findById(request.id)
+    override fun updateEmployee(id: Long, request: UpdateEmployeeRequest): EmployeeResponse {
+        val optionalEmployee: Optional<Employee> = employeeRepository.findById(id)
         if (optionalEmployee.isEmpty){
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         }

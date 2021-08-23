@@ -9,6 +9,6 @@ interface EmployeeService {
     fun addTask(request: TaskRequest) : EmployeeResponse
     fun deleteById(id: Long): String
     fun createEmployee(request: CreateEmployeeRequest) : EmployeeResponse
-    fun updateEmployee(request: UpdateEmployeeRequest) : EmployeeResponse
+    fun updateEmployee(id: Long,request: UpdateEmployeeRequest) : EmployeeResponse
 
 }
